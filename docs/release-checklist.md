@@ -52,8 +52,9 @@ test was performed during this cleanup.
   calibration logs, local `Elektor/` research and unverified mechanical drafts.
 - [x] Preserve the original local history separately. The public repository
   starts with a clean source snapshot; older editorial working notes are excluded.
-- [ ] Push the reviewed snapshot and confirm that the README and both code sets
-  are visible. Record the public URL here.
+- [x] Pushed the reviewed snapshot to `main` and verified the public README,
+  both code sets, BOM and licence through GitHub. Initial source commit:
+  [`e51209c`](https://github.com/nzwildcode/esp-foc-platter-deck/commit/e51209cb2cdd2866cd962986af92e5f79ce68f4a).
 
 ## Before tagging and distributing binaries
 
