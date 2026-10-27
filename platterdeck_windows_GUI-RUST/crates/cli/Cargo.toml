@@ -1,0 +1,11 @@
+[package]
+name = "platter-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+platter-proto = { path = "../proto" }
+platter-engine = { path = "../engine" }
+anyhow.workspace = true
+clap.workspace = true

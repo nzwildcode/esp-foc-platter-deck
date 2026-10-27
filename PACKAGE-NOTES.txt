@@ -1,0 +1,13 @@
+PlatterDeck source snapshot - prepared 2026-10-28
+Working source baseline: 23e4191; release documentation is an uncommitted update.
+Firmware/app source and build configuration are unchanged.
+Start with README.md and docs/getting-started.md.
+
+Contains both code sets, dashboard, tests, calibration tools, BOM and documentation.
+Excludes compiled binaries, Git history, build caches, local research and mechanical drafts.
+SOURCE-MANIFEST.sha256 covers the 47 source/documentation files.
+
+This is a source package, not a tagged or hardware-retested binary release.
+BOM supplier/pricing and mechanical details remain incomplete; see release checklist.
+Public repository: https://github.com/nzwildcode/esp-foc-platter-deck
+No tagged release or Elektor/Reddit submission is implied by this archive.

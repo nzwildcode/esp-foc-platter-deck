@@ -1,0 +1,18 @@
+[package]
+name = "platterdeck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+platter-proto = { path = "../proto" }
+platter-engine = { path = "../engine" }
+anyhow.workspace = true
+log.workspace = true
+env_logger.workspace = true
+clap.workspace = true
+eframe.workspace = true
+egui.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows-sys.workspace = true

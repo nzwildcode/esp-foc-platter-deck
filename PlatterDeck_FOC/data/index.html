@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#08111f">
+  <title>PlatterDeck FOC Console</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="backdrop"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">FOC_ESP32 · AS5048A SPI</p>
+        <h1>GM2804 Control Console</h1>
+      </div>
+      <div class="status-row">
+        <span class="status" id="connectionStatus"><i></i> Connecting</span>
+        <span class="status" id="sensorStatus"><i></i> Sensor</span>
+        <span class="status" id="motorStatus"><i></i> Motor</span>
+      </div>
+    </header>
+
+    <section class="banner warning" id="safetyBanner">
+      <strong>Safe build:</strong> the webpage and encoder are live, but the motor stage is locked.
+    </section>
+
+    <section class="metrics">
+      <article class="metric">
+        <span>Mechanical angle</span>
+        <strong id="angleValue">0.00°</strong>
+        <small id="turnValue">0.000 turns</small>
+      </article>
+      <article class="metric">
+        <span>Velocity</span>
+        <strong id="velocityValue">0.00</strong>
+        <small>rad/s</small>
+      </article>
+      <article class="metric">
+        <span>Target</span>
+        <strong id="targetValue">0.00</strong>
+        <small id="targetUnit">rad/s</small>
+      </article>
+      <article class="metric">
+        <span>Encoder magnitude</span>
+        <strong id="magnitudeValue">—</strong>
+        <small id="loopRate">0 control loops/s</small>
+      </article>
+    </section>
+
+    <section class="grid primary-grid">
+      <article class="panel control-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Live control</p>
+            <h2>Motor command</h2>
+          </div>
+          <label class="switch-label">
+            <span>Output</span>
+            <input type="checkbox" id="enableSwitch">
+            <span class="switch"></span>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Control mode</span>
+          <select id="modeSelect">
+            <option value="0">Open-loop velocity</option>
+            <option value="1">Open-loop angle</option>
+            <option value="2">Closed-loop velocity</option>
+            <option value="3">Closed-loop angle</option>
+            <option value="4">Torque (voltage)</option>
+          </select>
+        </label>
+
+        <div class="target-block">
+          <div class="target-title">
+            <label for="targetInput">Target</label>
+            <span id="targetRangeText">−20 to +20 rad/s</span>
+          </div>
+          <input type="range" id="targetSlider" min="-20" max="20" step="0.1" value="0">
+          <div class="target-entry">
+            <button class="button ghost" id="zeroTarget">Zero</button>
+            <input type="number" id="targetInput" step="0.1" value="0">
+            <button class="button danger" id="estopButton">E-STOP</button>
+          </div>
+        </div>
+
+        <canvas id="telemetryChart" height="180" aria-label="Velocity telemetry plot"></canvas>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Bring-up</p>
+            <h2>Encoder and alignment</h2>
+          </div>
+          <span class="chip" id="calibrationChip">Not calibrated</span>
+        </div>
+
+        <dl class="details">
+          <div><dt>SPI bus</dt><dd>18 / 19 / 23 / CS 13</dd></div>
+          <div><dt>SPI mode</dt><dd>Mode 1 · 1 MHz</dd></div>
+          <div><dt>Motor PWM</dt><dd>16 / 17 / 5 · EN 4</dd></div>
+          <div><dt>Current ADC</dt><dd>39 / 36 candidate</dd></div>
+          <div><dt>Sensor errors</dt><dd id="sensorErrors">0</dd></div>
+        </dl>
+
+        <div class="callout">
+          Calibration moves the rotor. Use a current-limited 12 V supply and
+          keep the motor mechanically free.
+        </div>
+
+        <div class="button-row">
+          <button class="button primary" id="calibrateButton">Calibrate FOC</button>
+          <button class="button" id="saveButton">Save settings</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid secondary-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Limits</p>
+            <h2>Electrical safety</h2>
+          </div>
+          <button class="button small" id="applyLimits">Apply</button>
+        </div>
+        <div class="form-grid">
+          <label class="field"><span>Supply voltage (V)</span><input id="supplyInput" type="number" min="12" max="28" step="0.1"></label>
+          <label class="field"><span>Pole pairs</span><input id="polePairsInput" type="number" min="1" max="30" step="1"></label>
+          <label class="field"><span>Voltage limit (V)</span><input id="voltageLimitInput" type="number" min="0" max="6" step="0.05"></label>
+          <label class="field"><span>Velocity limit (rad/s)</span><input id="velocityLimitInput" type="number" min="0" max="100" step="0.5"></label>
+          <label class="field"><span>Current limit (A)</span><input id="currentLimitInput" type="number" min="0" max="3" step="0.05"></label>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Closed loop</p>
+            <h2>Controller tuning</h2>
+          </div>
+          <button class="button small" id="applyPid">Apply</button>
+        </div>
+        <div class="form-grid">
+          <label class="field"><span>Velocity P</span><input id="velPInput" type="number" min="0" step="0.01"></label>
+          <label class="field"><span>Velocity I</span><input id="velIInput" type="number" min="0" step="0.1"></label>
+          <label class="field"><span>Velocity D</span><input id="velDInput" type="number" min="0" step="0.001"></label>
+          <label class="field"><span>Velocity filter Tf</span><input id="velTfInput" type="number" min="0" step="0.001"></label>
+          <label class="field"><span>Angle P</span><input id="angPInput" type="number" min="0" step="0.1"></label>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel system-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Maintenance</p>
+          <h2>Controller system</h2>
+        </div>
+        <button class="button ghost small" id="restartButton">Restart ESP32</button>
+      </div>
+      <div class="system-grid">
+        <div>
+          <span class="muted">Access point</span>
+          <strong>PlatterDeck</strong>
+          <small>http://<span id="ipAddress">192.168.4.1</span></small>
+        </div>
+        <div>
+          <span class="muted">Firmware profile</span>
+          <strong id="firmwareProfile">Safe / sensor only</strong>
+          <small id="heapValue">— free heap</small>
+        </div>
+        <form id="updateForm">
+          <label class="file-picker">
+            <span id="fileLabel">Choose firmware .bin</span>
+            <input id="firmwareFile" type="file" accept=".bin,application/octet-stream">
+          </label>
+          <button class="button" type="submit">Upload firmware</button>
+        </form>
+      </div>
+      <div class="progress hidden" id="updateProgress"><span></span></div>
+    </section>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+    <footer>GM2804 · one motor · Wi-Fi platter control · no cloud required</footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

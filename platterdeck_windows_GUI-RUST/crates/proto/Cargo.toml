@@ -1,0 +1,8 @@
+[package]
+name = "platter-proto"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "PlatterDeck board <-> PC protocol: 12-byte frames in a 40-byte UDP packet"
+
+[dependencies]

@@ -1,0 +1,16 @@
+ID,Category,Quantity,Unit,Item,Specification,Included_with,Status,Supplier_URL,Unit_price,Currency,Notes
+U1,Deck,1,each,ESP32 FOC controller board,ESP32-WROOM-32E FOC_ESP32 / 303FOCESP01 / LCT-279,,Model recorded in source; purchase details pending,,,,Confirm exact PCB revision and terminal labels
+M1,Deck,1,each,Gimbal motor,iPower GM2804; 7 pole pairs,,Model recorded in project; purchase details pending,,,,Confirm purchased motor variant and whether encoder is included
+E1,Deck,1,assembly,Magnetic encoder and shaft magnet,AS5048A 14-bit SPI; 3.3 V logic,Possibly M1,Interface confirmed in source; package contents pending,,,,Do not double-count an encoder included with M1; AS5048B I2C is not compatible with this firmware
+PS1,Deck,1,each,DC power supply,12 V DC,,Voltage recorded; current rating and connector pending,,,,Record actual current rating and polarity; use current limiting during bring-up
+P1,Deck,1,each,Platter,Material / diameter / thickness / mass to confirm,,Pending physical build details,,,,Record surface or mat if fitted
+H1,Deck,1,set,Platter hub or adapter,Attachment to rotating motor bell to confirm,,Pending physical build details,,,,Record screw sizes and engagement; check clearance
+B1,Deck,1,each,Base and motor mount,Use actual working v1 assembly,,Pending physical build details,,,,Separate CAD drafts have unverified PCB hole spacing and fit
+F1,Deck,1,set,Fasteners and spacers,Sizes and quantities to confirm,,Pending physical build details,,,,Record motor / platter / board fixings separately once measured
+W1,Deck,1,set,Motor phase wiring,Three phase leads and matching terminals,Possibly M1,Connector and supplied leads pending,,,,Confirm purchased motor lead arrangement
+W2,Deck,1,set,Encoder wiring,3.3 V / GND / SCLK / MISO / MOSI / CSn,Possibly M1,Signals confirmed; connectors pending,,,,CSn goes to GPIO13
+W3,Deck,1,set,Power leads and connector,Match PS1 and controller terminals,Possibly PS1,Pending physical build details,,,,Confirm polarity and strain relief
+T1,Tool,1,set,Programming cable or adapter,USB data cable; 3.3 V logic USB-to-UART if board requires it,,Board programming interface pending,,,,Do not assume an onboard USB-to-UART bridge
+T2,Tool,1,each,Current-limited bench supply,12 V output for initial setup,May serve as PS1,Supporting equipment,,,,Not included in deck cost
+PC1,Host,1,each,Windows PC,Windows 10/11 with Wi-Fi,,Required host,,,,Not included in deck cost
+A1,Host,1,set,Audio output,PC audio device and speakers or headphones,,Required host equipment,,,,Not included in deck cost
